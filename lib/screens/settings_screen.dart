@@ -1,5 +1,6 @@
 import 'dart:io';
-
+import 'dart:async';
+import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_app/main.dart';
 import 'package:chat_app/widgets/progress_widget.dart';
@@ -102,10 +103,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
         storageTaskSnapshot.ref.getDownloadURL().then((newImageDownloadUrl){
           photoUrl = newImageDownloadUrl;
 
+          // storing updated data to fireStore
           Firestore.instance.collection("users").document(id).updateData({
             "photoUrl" : photoUrl,
             "aboutMe" : aboutMe,
             "nickname" : nickname,
+          }).then((data) async{
+            await preferences.setString("photoUrl", photoUrl);
+
+            setState(() {
+              isLoading = false;
+            });
+
+            Fluttertoast.showToast(msg: "Updated Successfully.");
           });
         }, onError: (errorMsg){
           setState(() {
@@ -121,6 +131,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
       });
 
       Fluttertoast.showToast(msg: errorMsg.toString());
+    });
+  }
+
+  void updateData(){
+    nicknameFocusNode.unfocus();
+    aboutMeFocusNode.unfocus();
+
+    setState(() {
+      isLoading = false;
+    });
+
+    Firestore.instance.collection("users").document(id).updateData({
+      "photoUrl" : photoUrl,
+      "aboutMe" : aboutMe,
+      "nickname" : nickname,
+    }).then((data) async {
+      await preferences.setString("photoUrl", photoUrl);
+      await preferences.setString("aboutMe", aboutMe);
+      await preferences.setString("nickname", nickname);
+
+      setState(() {
+        isLoading = false;
+      });
+
+      Fluttertoast.showToast(msg: "Updated Successfully.");
     });
   }
 
@@ -273,7 +308,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               // Buttons
               Container(
                 child: FlatButton(
-                  onPressed: (){},
+                  onPressed: updateData,
                   child: Text(
                       "Update",
                     style: TextStyle(fontSize: 16.0),
