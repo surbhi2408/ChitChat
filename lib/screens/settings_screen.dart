@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_app/main.dart';
 import 'package:chat_app/widgets/progress_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -91,6 +93,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future uploadImageToFirestoreAndStorage() async{
     String mFileName = id;
     StorageReference storageReference = FirebaseStorage.instance.ref().child(mFileName);
+    StorageUploadTask storageUploadTask = storageReference.putFile(imageFileAvatar);
+    StorageTaskSnapshot storageTaskSnapshot;
+    storageUploadTask.onComplete.then((value){
+      if(value.error == null){
+        storageTaskSnapshot = value;
+
+        storageTaskSnapshot.ref.getDownloadURL().then((newImageDownloadUrl){
+          photoUrl = newImageDownloadUrl;
+
+          Firestore.instance.collection("users").document(id).updateData({
+            "photoUrl" : photoUrl,
+            "aboutMe" : aboutMe,
+            "nickname" : nickname,
+          });
+        }, onError: (errorMsg){
+          setState(() {
+            isLoading = false;
+          });
+
+          Fluttertoast.showToast(msg: "Error Occurred in getting download Url.");
+        });
+      }
+    }, onError: (errorMsg){
+      setState(() {
+        isLoading = false;
+      });
+
+      Fluttertoast.showToast(msg: errorMsg.toString());
+    });
   }
 
   @override
