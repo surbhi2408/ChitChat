@@ -16,6 +16,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
+  TextEditingController searchTextEditingController = TextEditingController();
+
   homePageHeader(){
     return AppBar(
       automaticallyImplyLeading: false,   // remove the back button
@@ -32,26 +34,40 @@ class _HomeScreenState extends State<HomeScreen> {
         margin: new EdgeInsets.only(bottom: 4.0),
         child: TextFormField(
           style: TextStyle(fontSize: 18.0, color: Colors.white),
+          controller: searchTextEditingController,
+          decoration: InputDecoration(
+            hintText: "Search Here...",
+            hintStyle: TextStyle(color: Colors.white),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.white),
+            ),
+            filled: true,
+            prefixIcon: Icon(Icons.person_pin, color: Colors.white, size: 30.0,),
+            suffixIcon: IconButton(
+              icon: Icon(
+                  Icons.clear,
+                color: Colors.white,
+              ),
+              onPressed: emptyTextFormField,
+            ),
+          ),
         ),
       ),
     );
+  }
+
+  emptyTextFormField(){
+    searchTextEditingController.clear();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: homePageHeader(),
-      body: RaisedButton.icon(onPressed: logoutUser, icon: Icon(Icons.close), label: Text('SignOut')),
     );
-  }
-
-  final GoogleSignIn googleSignIn = GoogleSignIn();
-  Future<Null> logoutUser() async{
-    await FirebaseAuth.instance.signOut();
-    await googleSignIn.disconnect();
-    await googleSignIn.signOut();
-
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => MyApp()), (Route<dynamic> route) => false);
   }
 }
 
