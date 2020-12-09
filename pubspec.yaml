@@ -59,6 +59,44 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/GoogleSignIn.png
+    - assets/stickers/mimi1.gif
+    - assets/stickers/mimi2.gif
+    - assets/stickers/mimi3.gif
+    - assets/stickers/mimi4.gif
+    - assets/stickers/mimi5.gif
+    - assets/stickers/mimi6.gif
+    - assets/stickers/mimi7.gif
+    - assets/stickers/mimi8.gif
+    - assets/stickers/mimi9.gif
+    - assets/stickers/mimi10.gif
+    - assets/stickers/mimi11.gif
+    - assets/stickers/mimi12.gif
+    - assets/stickers/mimi13.gif
+    - assets/stickers/mimi14.gif
+    - assets/stickers/mimi15.gif
+    - assets/stickers/love1.gif
+    - assets/stickers/love2.gif
+    - assets/stickers/love3.gif
+    - assets/stickers/love4.gif
+    - assets/stickers/love5.gif
+    - assets/stickers/love6.jpg
+    - assets/stickers/love7.gif
+    - assets/stickers/love8.gif
+    - assets/stickers/birthday.gif
+    - assets/stickers/emo1.gif
+    - assets/stickers/emo2.gif
+    - assets/stickers/emo3.gif
+    - assets/stickers/emo4.gif
+    - assets/stickers/emo5.gif
+    - assets/stickers/emo6.gif
+    - assets/stickers/emo7.gif
+    - assets/stickers/emo8.gif
+    - assets/stickers/emo9.gif
+    - assets/stickers/emo10.gif
+    - assets/stickers/emo11.gif
+    - assets/stickers/emo12.gif
+    - assets/stickers/emo13.jpg
+    - assets/stickers/emo14.gif
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

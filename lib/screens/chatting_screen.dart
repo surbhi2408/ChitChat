@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chat_app/widgets/progress_widget.dart';
 import 'package:flutter/material.dart';
 
 class Chat extends StatelessWidget {
@@ -73,6 +74,27 @@ class ChatScreenState extends State<ChatScreen> {
 
   final TextEditingController textEditingController = TextEditingController();
   final FocusNode focusNode = FocusNode();
+  bool isDisplaySticker;
+  bool isLoading;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    focusNode.addListener(onFocusChange);
+
+    isDisplaySticker = false;
+    isLoading = false;
+  }
+
+  onFocusChange(){
+    // hiding the sticker when keyboard appears
+    if(focusNode.hasFocus){
+      setState(() {
+        isDisplaySticker = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,15 +106,502 @@ class ChatScreenState extends State<ChatScreen> {
               // create list of Messages
               createListMessages(),
 
+              // show stickers
+              (isDisplaySticker ? createStickers() : Container()),
+
               // input controllers
               createInput(),
             ],
-          )
+          ),
+          createLoading(),
         ],
       ),
+      onWillPop: onBackPress,
     );
   }
 
+  createLoading(){
+    return Positioned(
+      child: isLoading ? circularProgress() : Container(),
+    );
+  }
+
+  Future<bool> onBackPress(){
+    if(isDisplaySticker){
+      setState(() {
+        isDisplaySticker = false;
+      });
+    }
+    else{
+      Navigator.pop(context);
+    }
+    return Future.value(false);
+  }
+
+  // function to create stickers
+  createStickers(){
+    return Container(
+      child: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+
+            // first row
+            Row(
+              children: <Widget>[
+                FlatButton(
+                  //onPressed: onSendMessage("mimi1",2),
+                  child: Image.asset(
+                    "assets/stickers/mimi1.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                FlatButton(
+                  //onPressed: onSendMessage("mimi2",2),
+                  child: Image.asset(
+                    "assets/stickers/mimi2.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                FlatButton(
+                  //onPressed: onSendMessage("mimi3",2),
+                  child: Image.asset(
+                    "assets/stickers/mimi3.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ],
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            ),
+
+            // 2nd row
+            Row(
+              children: <Widget>[
+                FlatButton(
+                  //onPressed: onSendMessage("mimi4",2),
+                  child: Image.asset(
+                    "assets/stickers/mimi4.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                FlatButton(
+                  //onPressed: onSendMessage("mimi5",2),
+                  child: Image.asset(
+                    "assets/stickers/mimi5.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                FlatButton(
+                  //onPressed: onSendMessage("mimi6",2),
+                  child: Image.asset(
+                    "assets/stickers/mimi6.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ],
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            ),
+
+            // 3rd row
+            Row(
+              children: <Widget>[
+                FlatButton(
+                  //onPressed: onSendMessage("mimi7",2),
+                  child: Image.asset(
+                    "assets/stickers/mimi7.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                FlatButton(
+                  //onPressed: onSendMessage("mimi8",2),
+                  child: Image.asset(
+                    "assets/stickers/mimi8.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                FlatButton(
+                  //onPressed: onSendMessage("mimi9",2),
+                  child: Image.asset(
+                    "assets/stickers/mimi9.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ],
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            ),
+
+            // 4th row
+            Row(
+              children: <Widget>[
+                FlatButton(
+                  //onPressed: onSendMessage("mimi10",2),
+                  child: Image.asset(
+                    "assets/stickers/mimi10.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                FlatButton(
+                  //onPressed: onSendMessage("mimi11",2),
+                  child: Image.asset(
+                    "assets/stickers/mimi11.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                FlatButton(
+                  //onPressed: onSendMessage("mimi12",2),
+                  child: Image.asset(
+                    "assets/stickers/mimi12.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ],
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            ),
+
+            // 5th row
+            Row(
+              children: <Widget>[
+                FlatButton(
+                  //onPressed: onSendMessage("mimi13",2),
+                  child: Image.asset(
+                    "assets/stickers/mimi13.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                FlatButton(
+                  //onPressed: onSendMessage("mimi14",2),
+                  child: Image.asset(
+                    "assets/stickers/mimi14.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                FlatButton(
+                  //onPressed: onSendMessage("mimi15",2),
+                  child: Image.asset(
+                    "assets/stickers/mimi15.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ],
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            ),
+
+            // 6th row
+            Row(
+              children: <Widget>[
+                FlatButton(
+                  //onPressed: onSendMessage("love1",2),
+                  child: Image.asset(
+                    "assets/stickers/love1.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                FlatButton(
+                  //onPressed: onSendMessage("love2",2),
+                  child: Image.asset(
+                    "assets/stickers/love2.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                FlatButton(
+                  //onPressed: onSendMessage("love3",2),
+                  child: Image.asset(
+                    "assets/stickers/love3.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ],
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            ),
+
+            // 7th row
+            Row(
+              children: <Widget>[
+                FlatButton(
+                  //onPressed: onSendMessage("love4",2),
+                  child: Image.asset(
+                    "assets/stickers/love4.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                FlatButton(
+                  //onPressed: onSendMessage("love5",2),
+                  child: Image.asset(
+                    "assets/stickers/love5.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                FlatButton(
+                  //onPressed: onSendMessage("love6",2),
+                  child: Image.asset(
+                    "assets/stickers/love6.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ],
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            ),
+
+            // 8th row
+            Row(
+              children: <Widget>[
+                FlatButton(
+                  //onPressed: onSendMessage("love7",2),
+                  child: Image.asset(
+                    "assets/stickers/love7.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                FlatButton(
+                  //onPressed: onSendMessage("love8",2),
+                  child: Image.asset(
+                    "assets/stickers/love8.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                FlatButton(
+                  //onPressed: onSendMessage("birthday",2),
+                  child: Image.asset(
+                    "assets/stickers/birthday.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ],
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            ),
+
+            // 9th row
+            Row(
+              children: <Widget>[
+                FlatButton(
+                  //onPressed: onSendMessage("emo1",2),
+                  child: Image.asset(
+                    "assets/stickers/emo1.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                FlatButton(
+                  //onPressed: onSendMessage("emo2",2),
+                  child: Image.asset(
+                    "assets/stickers/emo2.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                FlatButton(
+                  //onPressed: onSendMessage("emo3",2),
+                  child: Image.asset(
+                    "assets/stickers/emo3.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ],
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            ),
+
+            //10th row
+            Row(
+              children: <Widget>[
+                FlatButton(
+                  //onPressed: onSendMessage("emo4",2),
+                  child: Image.asset(
+                    "assets/stickers/emo4.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                FlatButton(
+                  //onPressed: onSendMessage("emo5",2),
+                  child: Image.asset(
+                    "assets/stickers/emo5.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                FlatButton(
+                  //onPressed: onSendMessage("emo6",2),
+                  child: Image.asset(
+                    "assets/stickers/emo6.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ],
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            ),
+
+            // 11th row
+            Row(
+              children: <Widget>[
+                FlatButton(
+                  //onPressed: onSendMessage("emo7",2),
+                  child: Image.asset(
+                    "assets/stickers/emo7.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                FlatButton(
+                  //onPressed: onSendMessage("emo8",2),
+                  child: Image.asset(
+                    "assets/stickers/emo8.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                FlatButton(
+                  //onPressed: onSendMessage("emo9",2),
+                  child: Image.asset(
+                    "assets/stickers/emo9.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ],
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            ),
+
+            // 12th row
+            Row(
+              children: <Widget>[
+                FlatButton(
+                  //onPressed: onSendMessage("emo10",2),
+                  child: Image.asset(
+                    "assets/stickers/emo10.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                FlatButton(
+                  //onPressed: onSendMessage("emo11",2),
+                  child: Image.asset(
+                    "assets/stickers/emo11.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                FlatButton(
+                  //onPressed: onSendMessage("emo12",2),
+                  child: Image.asset(
+                    "assets/stickers/emo12.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ],
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            ),
+
+            // 13th row
+            Row(
+              children: <Widget>[
+                FlatButton(
+                  //onPressed: onSendMessage("emo13",2),
+                  child: Image.asset(
+                    "assets/stickers/emo13.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                FlatButton(
+                  //onPressed: onSendMessage("emo14",2),
+                  child: Image.asset(
+                    "assets/stickers/emo14.gif",
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ],
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            ),
+
+          ],
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        ),
+      ),
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(
+            color: Colors.grey,
+          width: 0.5,
+        )),
+        color: Colors.white,
+      ),
+      padding: EdgeInsets.all(5.0),
+      height: 180.0,
+    );
+  }
+
+  void getSticker(){
+    focusNode.unfocus();
+    setState(() {
+      isDisplaySticker = !isDisplaySticker;
+    });
+  }
+
+  // function to create message list
   createListMessages(){
     return Flexible(
       child: Center(
@@ -129,7 +638,7 @@ class ChatScreenState extends State<ChatScreen> {
               child: IconButton(
                 icon: Icon(Icons.tag_faces),
                 color: Colors.lightBlueAccent,
-                onPressed: (){},
+                onPressed: getSticker,
               ),
             ),
             color: Colors.white,
