@@ -8,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Chat extends StatelessWidget {
@@ -682,7 +683,7 @@ class ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  isLastMsgLeft(int index){
+  bool isLastMsgLeft(int index){
     if((index > 0 && listMessage != null && listMessage[index - 1]["idFrom"] == id) || index == 0){
       return true;
     }
@@ -691,7 +692,7 @@ class ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  isLastMsgRight(int index){
+  bool isLastMsgRight(int index){
     if((index > 0 && listMessage != null && listMessage[index - 1]["idFrom"] != id) || index == 0){
       return true;
     }
@@ -788,7 +789,135 @@ class ChatScreenState extends State<ChatScreen> {
     // receiver messages - left side
     else{
       return Container(
-        
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                isLastMsgLeft(index)
+                    ? Material(
+                  // display receiver profile image
+                        child: CachedNetworkImage(
+                          placeholder: (context, url) => Container(
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.lightBlueAccent),
+                            ),
+                            width: 35.0,
+                            height: 35.0,
+                            padding: EdgeInsets.all(10.0),
+                          ),
+                          imageUrl: receiverAvatar,
+                          width: 35.0,
+                          height: 35.0,
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(18.0),
+                        ),
+                        clipBehavior: Clip.hardEdge,
+                      )
+                    : Container(
+                  width: 35.0,
+                ),
+
+                // display messages
+                document["type"] == 0
+
+                // text msg
+                    ? Container(
+                  child: Text(
+                    document["content"],
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                  width: 200.0,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  margin: EdgeInsets.only(left: 10.0),
+                )
+
+                // image msg
+              : document["type"] == 1
+              ? Container(
+                  child: FlatButton(
+                    child: Material(
+                      child: CachedNetworkImage(
+                        placeholder: (context, url) => Container(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.lightBlueAccent),
+                          ),
+                          width: 200.0,
+                          height: 200.0,
+                          padding: EdgeInsets.all(70.0),
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Material(
+                        child: Image.asset(
+                          "assets/images/img_not_available.jpeg",
+                          width: 200.0,
+                          height: 200.0,
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                          clipBehavior: Clip.hardEdge,
+                        ),
+                        imageUrl: document["content"],
+                        width: 200.0,
+                        height: 200.0,
+                        fit: BoxFit.cover,
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                      clipBehavior: Clip.hardEdge,
+                    ),
+                    onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => FullPhoto(url: document["content"])
+                      ));
+                      },
+                  ),
+                  margin: EdgeInsets.only(left: 10.0),
+                )
+
+                // sticker .gif msg
+                : Container(
+                  child: Image.asset(
+                    "assets/stickers/${document['content']}.gif",
+                    width: 100.0,
+                    height: 100.0,
+                    fit: BoxFit.cover,
+                  ),
+                  margin: EdgeInsets.only(bottom: isLastMsgRight(index) ? 20.0 : 10.0, right: 10.0),
+                ),
+
+              ],
+            ),
+
+            // message timing
+            isLastMsgLeft(index)
+                ? Container(
+                    child: Text(
+                      DateFormat("dd MMMM, yyyy - hh:mm:aa")
+                          .format(DateTime.fromMillisecondsSinceEpoch(int .parse(document["timestamp"]))),
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 12.0,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                    margin: EdgeInsets.only(left: 50.0, top: 50.0, bottom: 5.0),
+                  )
+                : Container()
+          ],
+          crossAxisAlignment: CrossAxisAlignment.start,
+        ),
+        margin: EdgeInsets.only(bottom: 10.0),
       );
     }
   }
